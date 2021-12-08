@@ -1,0 +1,115 @@
+---
+title: "Guided Exercise 4"
+author: "Zhirui Zhang, Zaiyang Guo"
+date: "12/16/2021"
+output: document
+---
+
+#The Case
+You’ve been hired as the data science team for a liberal arts college. The college currently has an entering class of about 1,500 students, and collects 32 million in tuition revenue from those students. Recent increases in endowment income mean that the college can forego some of its tuition revenue in order to change the profile of admitted students.
+
+#The college president and the board of trustees have two strategic goals:
+Increase the average SAT score to 1300
+Enroll at least 200 more students with incomes less than $50,000
+Here’s the rub: they want to do this without allowing tuition revenues to drop below $30 million and without changing the size of the entering class, which should be about 1,500 students (plus or minus 50, nobody minds sleeping in the study lounge, right?).
+
+#Your Job
+Your job is to come up with a strategy to accomplish the administration’s goals.
+You’ll need to incorporate the following elements into your two page memo for the president and the board of trustees.
+Use conditional means to describe the probability of enrolling once admitted (yield) for different groups of students.
+Create a model that accurately predicts the yield for admitted students. Describe the accuracy of this model and its key findings clearly.
+Use the estimates from this model to adjust the current pricing strategy to induce other students to enroll, given the above constraints.Describe your approach clearly.
+Predict the results of your change in pricing strategy.
+There are lots of ways to accomplish all of the above. Remember that you need to write up your findings in a nice narrative, including charts and tables to make your key points. If you think there are some ethical implications to your approach, describe those as well.
+
+#What to Submit
+The document describing the above should be 2-4 pages. You can “knit” the document in html or pdf from Rmarkdown, or you can create a separate Word (google doc) or pdf document. You need to submit BOTH your Rmd file AND your written summary.
+
+
+
+##Set up
+```{r}
+library(modelr)
+library(tidyverse)
+library(tidymodels)
+```
+
+```{r}
+ad<-read_rds("admit_data.rds")
+```
+
+##Data Wrangling
+```{r}
+ad<-ad%>%
+  mutate(yield_f=as_factor(ifelse(yield==1,"Yes","No")))%>%
+  mutate(yield_f=relevel(yield_f,ref="No"))%>%
+    mutate(sat=sat/100,
+         income=income/1000,
+         distance=distance/1000,
+         net_price=net_price/1000)
+```
+
+##Getting the baselines
+The average SAT score: 为什么run出来是sat_quintile和legacy??
+```{r}
+ad%>%
+  filter(yield==1)%>% #only focus on students that actually showed up
+  summarize(mean(sat))
+```
+Number of currently enrolled students who come from families that make less than $50,000 a year:
+```{r}
+ad%>%
+  filter(yield==1,income<50)%>%
+  count()
+```
+Amount of total revenue collected from first-year students:
+```{r}
+ad%>%
+  filter(yield==1)%>%
+  summarize(dollar(sum(net_price)))
+```
+Number of students currently yield:
+```{r}
+ad%>%
+  filter(yield==1)%>%
+  count() #baseline
+```
+
+##Changing Policies
+Changing our financial aid policy for students who have higher SAT scores, such that students with SAT score higher than 1400 could get a deduction of $10k in their tuition
+```{r}
+ad_result%>% ##???ad_result来自fit glm model,这里要加吗？
+  predict(ad)%>%
+  bind_cols(ad)%>%
+  group_by(sat,.pred_class)%>%
+  count()
+```
+```{r}
+ad_np<-ad%>%
+  mutate(net_price=ifelse(sat>=1400, 
+                              net_price-10,
+                              net_price))%>%
+  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
+```
+```{r}
+ad_np<-ad_result%>%
+  predict(ad_np)%>%
+  bind_cols(ad_np)
+```
+```{r}
+ad%>%
+  filter(yield==1)%>%
+  filter(sat>=1400)%>%
+  count()
+```
+```{r}
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(dollar(sum(net_price)))%>%
+  summarize(mean(sat))
+```
+
+
+
+
+
