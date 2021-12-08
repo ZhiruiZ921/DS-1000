@@ -4,14 +4,15 @@ author: "Zhirui Zhang, Zaiyang Guo"
 date: "12/16/2021"
 output: document
 ---
-Hello World******************
+
 #The Case
 You’ve been hired as the data science team for a liberal arts college. The college currently has an entering class of about 1,500 students, and collects 32 million in tuition revenue from those students. Recent increases in endowment income mean that the college can forego some of its tuition revenue in order to change the profile of admitted students.
 
 #The college president and the board of trustees have two strategic goals:
-Increase the average SAT score to 1300
-Enroll at least 200 more students with incomes less than $50,000
-Here’s the rub: they want to do this without allowing tuition revenues to drop below $30 million and without changing the size of the entering class, which should be about 1,500 students (plus or minus 50, nobody minds sleeping in the study lounge, right?).
+1. Increase the average SAT score to 1300
+2. Enroll at least 200 more students with incomes less than \$50,000
+3. Don't allow tuition revenues from first-year students to drop to less than \$30 million
+4. Keep the number of enrolled students between 1,450 and 1,550
 
 #Your Job
 Your job is to come up with a strategy to accomplish the administration’s goals.
@@ -35,7 +36,8 @@ library(tidymodels)
 ```
 
 ```{r}
-ad<-read_rds("admit_data.rds")
+ad<-read_rds("admit_data.rds")%>%
+  ungroup()
 ```
 
 ##Data Wrangling
@@ -49,26 +51,65 @@ ad<-ad%>%
          net_price=net_price/1000)
 ```
 
+## Setting the Regression Model
+```{r}
+logit_mod<-logistic_reg()%>%
+  set_engine("glm")%>%
+  set_mode("classification")
+```
+Create formula and recipe:
+```{r}
+admit_formula <- as.formula(
+                  "yield_f~
+                          legacy+
+                          visit+
+                          registered+
+                          sent_scores+
+                          sat+
+                          income+
+                          gpa+
+                          distance+
+                          net_price")
+
+admit_recipe<-recipe(admit_formula,ad)%>%
+  step_log(distance)
+```
+add workflow:
+```{r}
+ad_wf<-workflow()%>%
+  add_model(logit_mod)%>%
+  add_recipe(admit_recipe)
+```
+fit the model:
+```{r}
+ad_result<-ad_wf%>%
+  fit(ad)
+```
+see the results:
+```{r}
+tidy(ad_result)
+```
+
 ##Getting the baselines
-The average SAT score: 为什么run出来是sat_quintile和legacy??
+The average SAT score: 1220
 ```{r}
 ad%>%
   filter(yield==1)%>% #only focus on students that actually showed up
   summarize(mean(sat))
 ```
-Number of currently enrolled students who come from families that make less than $50,000 a year:
+Number of currently enrolled students who come from families that make less than $50,000 a year: 66
 ```{r}
 ad%>%
   filter(yield==1,income<50)%>%
   count()
 ```
-Amount of total revenue collected from first-year students:
+Amount of total revenue collected from first-year students:$31,587,850
 ```{r}
 ad%>%
   filter(yield==1)%>%
   summarize(dollar(sum(net_price)))
 ```
-Number of students currently yield:
+Number of students currently yield: 1476
 ```{r}
 ad%>%
   filter(yield==1)%>%
@@ -78,7 +119,7 @@ ad%>%
 ##Changing Policies
 Changing our financial aid policy for students who have higher SAT scores, such that students with SAT score higher than 1400 could get a deduction of $10k in their tuition
 ```{r}
-ad_result%>% ##???ad_result来自fit glm model,这里要加吗？
+ad_result%>%
   predict(ad)%>%
   bind_cols(ad)%>%
   group_by(sat,.pred_class)%>%
@@ -86,7 +127,7 @@ ad_result%>% ##???ad_result来自fit glm model,这里要加吗？
 ```
 ```{r}
 ad_np<-ad%>%
-  mutate(net_price=ifelse(sat>=1400, 
+  mutate(net_price=ifelse(sat>=14, 
                               net_price-10,
                               net_price))%>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
@@ -97,19 +138,39 @@ ad_np<-ad_result%>%
   bind_cols(ad_np)
 ```
 ```{r}
-ad%>%
-  filter(yield==1)%>%
-  filter(sat>=1400)%>%
-  count()
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(dollar(sum(net_price)))
 ```
 ```{r}
 ad_np%>%
   filter(.pred_class=="Yes")%>%
-  summarize(dollar(sum(net_price)))%>%
   summarize(mean(sat))
 ```
+We saw the mean sat score is increased to 1230, and the net price is still above the required level.
 
-
-
-
+Try another policy: students with SAT score higher than 1350 could get a deduction of $10k in their tuition
+```{r}
+ad_np<-ad%>%
+  mutate(net_price=ifelse(sat>=13.5, 
+                              net_price-10,
+                              net_price))%>%
+  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
+```
+```{r}
+ad_np<-ad_result%>%
+  predict(ad_np)%>%
+  bind_cols(ad_np)
+```
+```{r}
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(dollar(sum(net_price)))
+```
+```{r}
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(mean(sat))
+```
+??为什么即使我改了policy(sat>=和net price-)mean sat一直都是12.3
 
