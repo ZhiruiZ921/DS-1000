@@ -4,6 +4,11 @@ author: "Zhirui Zhang, Zaiyang Guo"
 date: "12/16/2021"
 output: document
 ---
+```{r}
+if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
+  setwd("~/Programming/Vanderbilt/DS/DS1000/projects/DS-1000/")
+}
+```
 
 #The Case
 You’ve been hired as the data science team for a liberal arts college. The college currently has an entering class of about 1,500 students, and collects 32 million in tuition revenue from those students. Recent increases in endowment income mean that the college can forego some of its tuition revenue in order to change the profile of admitted students.
