@@ -5,6 +5,12 @@ date: "12/16/2021"
 output: document
 ---
 ```{r}
+# Clear variables
+rm(list=ls())
+# Clear all plots
+graphics.off()
+# Clear the console
+cat("\014")
 if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
   setwd("~/Programming/Vanderbilt/DS/DS1000/projects/DS-1000/")
 }
@@ -55,6 +61,14 @@ ad<-ad%>%
          distance=distance/1000,
          net_price=net_price/1000)
 ```
+## Split Data 
+```{r}
+split_data_glm <- initial_split(ad)
+
+ad_train_glm <- training(split_data_glm)
+
+ad_test_glm <- testing(split_data_glm)
+```
 
 ## Setting the Regression Model
 ```{r}
@@ -88,11 +102,53 @@ ad_wf<-workflow()%>%
 fit the model:
 ```{r}
 ad_result<-ad_wf%>%
-  fit(ad)
+  fit(ad_train_glm)
 ```
 see the results:
 ```{r}
 tidy(ad_result)
+```
+## Getting ROC
+```{r}
+# generate prediction
+ad_wf_glm_pred <- ad_result %>%
+  predict(ad_test_glm) %>%
+  bind_cols(ad_test_glm)
+```
+```{r}
+ad %>% 
+  summarize(mean_yield = mean(yield))
+```
+```{r}
+# accuracy
+ad_wf_glm_pred %>%
+  accuracy(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# sensitivity
+ad_wf_glm_pred %>%
+  sens(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# specificity
+ad_wf_glm_pred %>%
+  spec(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# ROC curve
+ad_wf_glm_roc <- ad_result %>%
+  predict(ad_test_glm, type="prob") %>%
+  bind_cols(ad_test_glm)
+```
+```{r}
+ad_wf_glm_roc %>%
+  roc_curve(truth=yield_f, .estimate=.pred_Yes, event_level="second") %>%
+  autoplot()
+```
+```{r}
+ad_wf_glm_roc %>%
+  roc_auc(truth=yield_f, .estimate=.pred_Yes, event_level="second")
+
 ```
 
 ##Getting the baselines
@@ -152,8 +208,8 @@ ad_pred_filtered
 ```{r}
 ad_np<-ad%>%
   mutate(net_price=ifelse(sat>=13, 
-                              net_price - sat * 5,
-                              net_price + sat * 1))%>%
+                              net_price,
+                              net_price + sat * 4))%>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 ```
 ```{r}
