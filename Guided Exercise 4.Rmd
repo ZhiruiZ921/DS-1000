@@ -124,17 +124,36 @@ ad%>%
 ##Changing Policies
 Changing our financial aid policy for students who have higher SAT scores, such that students with SAT score higher than 1400 could get a deduction of $10k in their tuition
 ```{r}
-ad_result%>%
+ad_pred <- ad_result%>%
   predict(ad)%>%
-  bind_cols(ad)%>%
-  group_by(sat > 13,.pred_class)%>%
+  bind_cols(ad)
+ad_pred %>%
+  group_by(sat >= 13, .pred_class)%>%
   count()
+```
+```{r}
+# ad_np%>%
+#   filter(.pred_class=="Yes")%>%
+#   summarize(mean(sat))
+# ad_pred_1 <- ad_pred %>% 
+#   filter(sat < 13 & .pred_class=="No")
+# ad_pred_2 <- ad_pred %>%
+#   filter(sat < 13 & .pred_class=="Yes")
+# ad_pred_3 <- ad_pred %>%
+#   filter(sat > 13 & .pred_class=="No")
+# ad_predp_4 <- ad_pred %>%
+#   filter(sat > 13 & .pred_class=="Yes")
+# ad_pred_combined <- rbind(ad_pred_1, ad_pred_2, ad_pred_3)
+ad_pred_filtered <- ad_pred %>%
+  filter(sat > 13 | .pred_class=="Yes") %>%
+  summarize(mean(sat * 100))
+ad_pred_filtered
 ```
 ```{r}
 ad_np<-ad%>%
   mutate(net_price=ifelse(sat>=13, 
-                              net_price-10,
-                              net_price))%>%
+                              net_price - sat * 5,
+                              net_price + sat * 1))%>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 ```
 ```{r}
@@ -152,6 +171,13 @@ ad_np%>%
   filter(.pred_class=="Yes")%>%
   summarize(mean(sat))
 ```
+```{r}
+# calculate how many students are now predicted to enroll
+ad_np %>%
+  filter(.pred_class=="Yes") %>%
+  count()
+```
+
 We saw the mean sat score is increased to 1230, and the net price is still above the required level.
 
 Try another policy: students with SAT score higher than 1350 could get a deduction of $10k in their tuition
@@ -172,10 +198,6 @@ Try another policy: students with SAT score higher than 1350 could get a deducti
 #   filter(.pred_class=="Yes")%>%
 #   summarize(dollar(sum(net_price)))
 ```
-```{r}
-# ad_np%>%
-#   filter(.pred_class=="Yes")%>%
-#   summarize(mean(sat))
-```
+
 ??为什么即使我改了policy(sat>=和net price-)mean sat一直都是12.3
 
