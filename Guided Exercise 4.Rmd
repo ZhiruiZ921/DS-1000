@@ -100,7 +100,7 @@ The average SAT score: 1220
 ```{r}
 ad%>%
   filter(yield==1)%>% #only focus on students that actually showed up
-  summarize(mean(sat))
+  summarize(mean(sat) * 100)
 ```
 Number of currently enrolled students who come from families that make less than $50,000 a year: 66
 ```{r}
@@ -112,7 +112,7 @@ Amount of total revenue collected from first-year students:$31,587,850
 ```{r}
 ad%>%
   filter(yield==1)%>%
-  summarize(dollar(sum(net_price)))
+  summarize(dollar(sum(net_price) * 1000))
 ```
 Number of students currently yield: 1476
 ```{r}
@@ -127,12 +127,12 @@ Changing our financial aid policy for students who have higher SAT scores, such 
 ad_result%>%
   predict(ad)%>%
   bind_cols(ad)%>%
-  group_by(sat,.pred_class)%>%
+  group_by(sat > 13,.pred_class)%>%
   count()
 ```
 ```{r}
 ad_np<-ad%>%
-  mutate(net_price=ifelse(sat>=14, 
+  mutate(net_price=ifelse(sat>=13, 
                               net_price-10,
                               net_price))%>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
@@ -156,26 +156,26 @@ We saw the mean sat score is increased to 1230, and the net price is still above
 
 Try another policy: students with SAT score higher than 1350 could get a deduction of $10k in their tuition
 ```{r}
-ad_np<-ad%>%
-  mutate(net_price=ifelse(sat>=13.5, 
-                              net_price-10,
-                              net_price))%>%
-  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
+# ad_np<-ad%>%
+#   mutate(net_price=ifelse(sat>=13.5, 
+#                               net_price-10,
+#                               net_price))%>%
+#   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 ```
 ```{r}
-ad_np<-ad_result%>%
-  predict(ad_np)%>%
-  bind_cols(ad_np)
+# ad_np<-ad_result%>%
+#   predict(ad_np)%>%
+#   bind_cols(ad_np)
 ```
 ```{r}
-ad_np%>%
-  filter(.pred_class=="Yes")%>%
-  summarize(dollar(sum(net_price)))
+# ad_np%>%
+#   filter(.pred_class=="Yes")%>%
+#   summarize(dollar(sum(net_price)))
 ```
 ```{r}
-ad_np%>%
-  filter(.pred_class=="Yes")%>%
-  summarize(mean(sat))
+# ad_np%>%
+#   filter(.pred_class=="Yes")%>%
+#   summarize(mean(sat))
 ```
 ??为什么即使我改了policy(sat>=和net price-)mean sat一直都是12.3
 
