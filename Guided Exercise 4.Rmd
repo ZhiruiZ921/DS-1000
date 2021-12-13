@@ -151,10 +151,10 @@ ad_net_price <- ad %>%
 
 ad_net_price
 
-# ad_net_price %>%
-#   ggplot(aes(x=net_price_decile, y=pct_yield)) +
-#   geom_point() +
-#   geom_smooth()
+ad_net_price %>%
+  ggplot(aes(x=min_price, y=pct_yield)) +
+  geom_point() +
+  geom_smooth()
 ```
 
 ##Data Wrangling
