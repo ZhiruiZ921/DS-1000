@@ -54,76 +54,107 @@ ad<-read_rds("admit_data.rds")%>%
 ## Part 1: Use conditional means to describe yield by different groups
 ```{r}
 # by income
-ad %>%
+ad_income <- ad %>%
   mutate(income_decile = ntile(income, 10)) %>%
   group_by(income_decile) %>%
   summarize(min_income = min(income),
             pct_yield = mean(yield)) %>%
   ungroup()
+
+ad_income
+
+# ad_income %>%
+#   ggplot(aes(x=income_decile, y=pct_yield)) +
+#   geom_point() +
+#   geom_smooth()
 ```
 
 ```{r}
 # by sat
-ad %>%
+ad_sat <- ad %>%
   mutate(sat_decile = ntile(sat, 10)) %>%
   group_by(sat_decile) %>%
   summarize(min_sat = min(sat),
             pct_yield = mean(yield)) %>%
   ungroup()
+
+ad_sat
+
+# ad_sat %>%
+#   ggplot(aes(x=sat_decile, y=pct_yield)) +
+#   geom_point() + 
+#   geom_smooth()
 ```
 
 ```{r}
 # by gpa
-ad %>%
+ad_gpa <- ad %>%
   mutate(gpa_decile = ntile(gpa, 10)) %>%
   group_by(gpa_decile) %>%
   summarize(min_gpa = min(gpa),
             pct_yield = mean(yield)) %>%
   ungroup() 
+
+ad_gpa
 ```
 
 ```{r}
 # by visit
-ad %>%
+ad_visit <- ad %>%
   group_by(visit) %>%
   summarize(pct_yield = mean(yield)) %>%
   ungroup() 
+
+ad_visit
 ```
 
 ```{r}
 # by legacy
-ad %>%
+ad_legacy <- ad %>%
   group_by(legacy) %>%
   summarize(pct_yield = mean(yield)) %>%
   ungroup()
+
+ad_legacy
 ```
 
 ```{r}
 # by registered 
-ad %>%
+ad_registered <- ad %>%
   group_by(sent_scores) %>%
   summarize(pct_yield = mean(yield)) %>%
   ungroup()
+
+ad_registered
 ```
 
 ```{r}
 # by distance
-ad %>%
+ad_distance <- ad %>%
   mutate(log_distance_decile = ntile(log(distance), 10)) %>%
   group_by(log_distance_decile) %>%
   summarize(min_distance = min(distance),
-            mean_yield = mean(yield)) %>%
+            pct_yield = mean(yield)) %>%
   ungroup()
+
+ad_distance
 ```
 
 ```{r}
 # by net price
-ad %>%
+ad_net_price <- ad %>%
   mutate(net_price_decile = ntile(net_price, 10)) %>%
   group_by(net_price_decile) %>%
   summarize(min_price = min(net_price),
-            mean_yield = mean(yield)) %>%
+            pct_yield = mean(yield)) %>%
   ungroup()
+
+ad_net_price
+
+# ad_net_price %>%
+#   ggplot(aes(x=net_price_decile, y=pct_yield)) +
+#   geom_point() +
+#   geom_smooth()
 ```
 
 ##Data Wrangling
@@ -285,7 +316,7 @@ Changing our financial aid policy for students who have higher SAT scores, such 
 ad_np<-ad%>%
   mutate(net_price=ifelse(sat>=13, 
                               net_price - (sat-13)*20,
-                              net_price + 10))%>%
+                              net_price + (sat-13)*5))%>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 ```
 ```{r}
