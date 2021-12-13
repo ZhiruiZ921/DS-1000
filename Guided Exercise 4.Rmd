@@ -4,17 +4,6 @@ author: "Zhirui Zhang, Zaiyang Guo"
 date: "12/16/2021"
 output: document
 ---
-```{r}
-# Clear variables
-rm(list=ls())
-# Clear all plots
-graphics.off()
-# Clear the console
-cat("\014")
-if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
-  setwd("~/Programming/Vanderbilt/DS/DS1000/projects/DS-1000/")
-}
-```
 
 #The Case
 You’ve been hired as the data science team for a liberal arts college. The college currently has an entering class of about 1,500 students, and collects 32 million in tuition revenue from those students. Recent increases in endowment income mean that the college can forego some of its tuition revenue in order to change the profile of admitted students.
@@ -37,9 +26,20 @@ There are lots of ways to accomplish all of the above. Remember that you need to
 #What to Submit
 The document describing the above should be 2-4 pages. You can “knit” the document in html or pdf from Rmarkdown, or you can create a separate Word (google doc) or pdf document. You need to submit BOTH your Rmd file AND your written summary.
 
+## Cleaning up
+```{r}
+# Clear variables
+rm(list=ls())
+# Clear all plots
+graphics.off()
+# Clear the console
+cat("\014")
+if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
+  setwd("~/Programming/Vanderbilt/DS/DS1000/projects/DS-1000/")
+}
+```
 
-
-##Set up
+## Set up
 ```{r}
 library(modelr)
 library(tidyverse)
@@ -48,6 +48,81 @@ library(tidymodels)
 
 ```{r}
 ad<-read_rds("admit_data.rds")%>%
+  ungroup()
+```
+
+## Part 1: Use conditional means to describe yield by different groups
+```{r}
+# by income
+ad %>%
+  mutate(income_decile = ntile(income, 10)) %>%
+  group_by(income_decile) %>%
+  summarize(min_income = min(income),
+            pct_yield = mean(yield)) %>%
+  ungroup()
+```
+
+```{r}
+# by sat
+ad %>%
+  mutate(sat_decile = ntile(sat, 10)) %>%
+  group_by(sat_decile) %>%
+  summarize(min_sat = min(sat),
+            pct_yield = mean(yield)) %>%
+  ungroup()
+```
+
+```{r}
+# by gpa
+ad %>%
+  mutate(gpa_decile = ntile(gpa, 10)) %>%
+  group_by(gpa_decile) %>%
+  summarize(min_gpa = min(gpa),
+            pct_yield = mean(yield)) %>%
+  ungroup() 
+```
+
+```{r}
+# by visit
+ad %>%
+  group_by(visit) %>%
+  summarize(pct_yield = mean(yield)) %>%
+  ungroup() 
+```
+
+```{r}
+# by legacy
+ad %>%
+  group_by(legacy) %>%
+  summarize(pct_yield = mean(yield)) %>%
+  ungroup()
+```
+
+```{r}
+# by registered 
+ad %>%
+  group_by(sent_scores) %>%
+  summarize(pct_yield = mean(yield)) %>%
+  ungroup()
+```
+
+```{r}
+# by distance
+ad %>%
+  mutate(log_distance_decile = ntile(log(distance), 10)) %>%
+  group_by(log_distance_decile) %>%
+  summarize(min_distance = min(distance),
+            mean_yield = mean(yield)) %>%
+  ungroup()
+```
+
+```{r}
+# by net price
+ad %>%
+  mutate(net_price_decile = ntile(net_price, 10)) %>%
+  group_by(net_price_decile) %>%
+  summarize(min_price = min(net_price),
+            mean_yield = mean(yield)) %>%
   ungroup()
 ```
 
