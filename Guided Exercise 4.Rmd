@@ -264,23 +264,28 @@ ad%>%
   filter(yield==1)%>% #only focus on students that actually showed up
   summarize(mean(sat) * 100)
 ```
-Number of currently enrolled students who come from families that make less than $50,000 a year: 66
+Number of currently enrolled students who come from families that make less than $50,000 a year: 77; while there are 341 low-income students in total
 ```{r}
 ad%>%
   filter(yield==1,income<50)%>%
   count()
 ```
-Amount of total revenue collected from first-year students:$31,587,848
+```{r}
+ad%>%
+  filter(income<50)%>%
+  count()
+```
+Amount of total revenue collected from first-year students:$30,674,149
 ```{r}
 ad%>%
   filter(yield==1)%>%
   summarize(dollar(sum(net_price) * 1000))
 ```
-Number of students currently yield: 1476
+Number of students currently yield: 1466
 ```{r}
 ad%>%
   filter(yield==1)%>%
-  count() #baseline
+  count()
 ```
 
 ##Changing Policies
@@ -311,12 +316,12 @@ ad_pred_filtered <- ad_pred %>%
 ad_pred_filtered
 ```
 
-Changing our financial aid policy for students who have higher SAT scores, such that students with SAT score higher than 1300 could get a deduction of $20k in their tuition for every 100 score they exceeded the threshold, while students with lower scores will be added $10k.
+Changing our financial aid policy for students who have higher SAT scores, such that students with SAT score higher than 1300 could get a deduction of $40k in their tuition for every 100 score they exceeded the threshold, while students with lower scores will be added $5k for every 100 score.
 ```{r}
 ad_np<-ad%>%
   mutate(net_price=ifelse(sat>=13, 
-                              net_price - (sat-13)*20,
-                              net_price + (sat-13)*5))%>%
+                              net_price - (sat-13)*40,
+                              net_price - (sat-13)*5))%>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 ```
 ```{r}
@@ -325,11 +330,13 @@ ad_np<-ad_result%>%
   bind_cols(ad_np)
 ```
 ```{r}
+# calculate the total revenue to the school from students now predicted to enroll
 ad_np%>%
   filter(.pred_class=="Yes")%>%
   summarize(dollar(sum(net_price)*1000))
 ```
 ```{r}
+# calculate the SAT average for students now predicted to enroll
 ad_np%>%
   filter(.pred_class=="Yes")%>%
   summarize(mean(sat)*100)
@@ -340,43 +347,109 @@ ad_np %>%
   filter(.pred_class=="Yes") %>%
   count()
 ```
-We saw the mean sat score is increased to 1239, and the net price ($36,175,797) is still above the required level, while the number of students (1363) is below expected.
-
-Try another policy: students with SAT score higher than 1350 could get a deduction of $10k in their tuition
 ```{r}
-# ad_np<-ad%>%
-#   mutate(net_price=ifelse(sat>=13.5, 
-#                               net_price-10,
-#                               net_price))%>%
-#   mutate(net_price=ifelse(net_price<0,0,net_price))
-```
-```{r}
-# ad_np<-ad_result%>%
-#   predict(ad_np)%>%
-#   bind_cols(ad_np)
-```
-```{r}
-# ad_np%>%
-#   filter(.pred_class=="Yes")%>%
-#   summarize(dollar(sum(net_price)))
-```
-
-只选low income中SAT分数最高的前266名
-```{r}
-ad%>%
+# calculate how many low income students are now predicted to enroll
+ad_np %>%
+  filter(.pred_class=="Yes") %>%
   filter(income<=50)%>%
-  select(income,sat,yield)%>%
-  arrange(-sat)%>%
-  top_n(266)
+  count()
 ```
+We saw the mean sat score is increased to 1239, and the net price ($30,572,784) is still above the required level, while the number of students (1390) is within expected, with 27 low income student.
 
-SAT成绩最差的xx名不录取
+Add another policy: deduct $30k for students whose family income is below $50,000
 ```{r}
-ad%>%
-  filter(sat<=13)%>%
-  filter(yield==1)%>%
-  select(income, sat, yield)%>%
-  arrange(sat)
+ad_np<-ad%>%
+  mutate(net_price=ifelse(sat>=13, 
+                              net_price - (sat-13)*40,
+                              net_price - (sat-13)*5))%>%
+  mutate(net_price=ifelse(income<=50, 
+                              net_price - 30,
+                              net_price))%>%
+  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 ```
+```{r}
+ad_np<-ad_result%>%
+  predict(ad_np)%>%
+  bind_cols(ad_np)
+```
+```{r}
+# calculate the total revenue to the school from students now predicted to enroll
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(dollar(sum(net_price)*1000))
+```
+```{r}
+# calculate the SAT average for students now predicted to enroll
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(mean(sat)*100)
+```
+```{r}
+# calculate how many students are now predicted to enroll
+ad_np %>%
+  filter(.pred_class=="Yes") %>%
+  count()
+```
+```{r}
+# calculate how many low income students are now predicted to enroll
+ad_np %>%
+  filter(.pred_class=="Yes") %>%
+  filter(income<=50)%>%
+  count()
+```
+We now have a total revenue of $30,275,183 (above expectation), an SAT average of 1237 (below expectation), a total number of enrollment of 1412 (below expectation), and 76 low income students (below expectation).
+
+Add another policy: 
+```{r}
+ad_np<-ad%>%
+  mutate(net_price=ifelse(sat>=13, 
+                              net_price - (sat-13)*35,
+                              net_price - (sat-13)*5))%>%
+  mutate(net_price=ifelse(income<=50, #incentivize low income
+                              net_price - 30,
+                              net_price))%>%
+  mutate(net_price=ifelse(income>=150, #for high income
+                              net_price + 10,
+                              net_price))%>%
+  mutate(net_price=ifelse(gpa>=3.8, #gpa和yield也有positive correlation
+                              net_price - (gpa-3.8)*10,
+                              net_price))%>%
+  mutate(net_price=ifelse(sent_scores==1,#sent scores和yield的correlation最强
+                              net_price - 10,
+                              net_price))%>%
+  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
+```
+```{r}
+ad_np<-ad_result%>%
+  predict(ad_np)%>%
+  bind_cols(ad_np)
+```
+```{r}
+# calculate the total revenue to the school from students now predicted to enroll
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(dollar(sum(net_price)*1000))
+```
+```{r}
+# calculate the SAT average for students now predicted to enroll
+ad_np%>%
+  filter(.pred_class=="Yes")%>%
+  summarize(mean(sat)*100)
+```
+```{r}
+# calculate how many students are now predicted to enroll
+ad_np %>%
+  filter(.pred_class=="Yes") %>%
+  count()
+```
+```{r}
+# calculate how many low income students are now predicted to enroll
+ad_np %>%
+  filter(.pred_class=="Yes") %>%
+  filter(income<=50)%>%
+  count()
+```
+We now have a total revenue of $32,838,519 (meet expectation, above original), an SAT average of 1234 (below expectation, above original), a total number of enrollment of 1458 (meet expectation), and 77 low income students (below expectation, same as original).
+
 
 
