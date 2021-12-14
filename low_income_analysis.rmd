@@ -1,0 +1,151 @@
+## Cleaning up
+```{r}
+# Clear variables
+rm(list=ls())
+# Clear all plots
+graphics.off()
+# Clear the console
+cat("\014")
+if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
+  setwd("~/Programming/Vanderbilt/DS/DS1000/projects/DS-1000/")
+}
+```
+
+## Set up
+```{r}
+library(modelr)
+library(tidyverse)
+library(tidymodels)
+```
+
+```{r}
+ad<-read_rds("admit_data.rds")%>%
+  ungroup()
+```
+
+
+# Data Wrangling
+```{r}
+ad<-ad%>%
+  mutate(yield_f=as_factor(ifelse(yield==1,"Yes","No")))%>%
+  mutate(yield_f=relevel(yield_f,ref="No"))%>%
+    mutate(sat=sat/100,
+         income=income/1000,
+         distance=distance/1000,
+         net_price=net_price/1000)
+```
+# Filter out low-income students (income < $50,000)
+```{r}
+ad_lowincome <- ad %>%
+  filter(income < 50000/1000)
+```
+
+# Split the data for analysis
+```{r}
+split_data_glm <- initial_split(ad_lowincome)
+
+ad_train_glm <- training(split_data_glm)
+
+ad_test_glm <- testing(split_data_glm)
+```
+# Logistical regression analysis
+```{r}
+logit_mod<-logistic_reg()%>%
+  set_engine("glm")%>%
+  set_mode("classification")
+
+admit_formula <- as.formula(
+                  "yield_f~
+                          legacy+
+                          visit+
+                          registered+
+                          sent_scores+
+                          sat+
+                          income+
+                          gpa+
+                          distance+
+                          net_price")
+
+admit_recipe<-recipe(admit_formula,ad)%>%
+  step_log(distance)
+
+ad_wf<-workflow()%>%
+  add_model(logit_mod)%>%
+  add_recipe(admit_recipe)
+
+ad_result<-ad_wf%>%
+  fit(ad_train_glm)
+
+tidy(ad_result)
+```
+
+## Getting ROC
+```{r}
+# generate prediction
+ad_wf_glm_pred <- ad_result %>%
+  predict(ad_test_glm) %>%
+  bind_cols(ad_test_glm)
+```
+```{r}
+ad %>% 
+  summarize(mean_yield = mean(yield))
+```
+```{r}
+# accuracy
+ad_wf_glm_pred %>%
+  accuracy(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# sensitivity
+ad_wf_glm_pred %>%
+  sens(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# specificity
+ad_wf_glm_pred %>%
+  spec(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# ROC curve
+ad_wf_glm_roc <- ad_result %>%
+  predict(ad_test_glm, type="prob") %>%
+  bind_cols(ad_test_glm)
+```
+```{r}
+ad_wf_glm_roc %>%
+  roc_curve(truth=yield_f, .estimate=.pred_Yes, event_level="second") %>%
+  autoplot()
+```
+```{r}
+ad_wf_glm_roc %>%
+  roc_auc(truth=yield_f, .estimate=.pred_Yes, event_level="second")
+
+```
+
+
+
+
+# what if the net price is negative
+```{r}
+hypo_data <- ad_lowincome %>%
+  # supply the mode (for each variable) of the entire dataset 
+  data_grid(.model=ad_fit$fit,
+            net_price = seq(from=-5, to=0, by=0.05))
+```
+```{r}
+ad_negativeprice <- ad_result%>%
+  predict(hypo_data,type="prob")%>%
+  bind_cols(hypo_data)
+```
+
+```{r}
+ad_fit <- ad_result %>% extract_fit_parsnip()
+ad_lowincome %>%
+  ggplot(aes(x=net_price, y=yield)) + 
+  geom_point() +
+  geom_smooth()
+ad_negativeprice %>%
+  ggplot(aes(x=net_price, y=.pred_Yes)) + 
+  geom_point() +
+  geom_smooth()
+```
