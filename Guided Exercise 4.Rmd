@@ -171,6 +171,9 @@ ad<-ad%>%
 ```
 ## Split Data 
 ```{r}
+# set seed 
+set.seed(6666)
+
 split_data_glm <- initial_split(ad)
 
 ad_train_glm <- training(split_data_glm)
