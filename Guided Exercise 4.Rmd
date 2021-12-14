@@ -51,7 +51,7 @@ ad<-read_rds("admit_data.rds")%>%
   ungroup()
 ```
 
-## Part 1: Use conditional means to describe yield by different groups
+# Part 1: Use conditional means to describe yield by different groups
 ```{r}
 # by income
 ad_income <- ad %>%
@@ -158,7 +158,8 @@ ad_net_price
 ```
 
 
-# ---------------- Part 2: Create a model to predict yield, and describe accuracy ----------------
+# Part 2: Create a model to predict yield, and describe accuracy
+
 ##Data Wrangling
 ```{r}
 ad<-ad%>%
@@ -219,6 +220,7 @@ see the results:
 ```{r}
 tidy(ad_result)
 ```
+
 ## Getting ROC
 ```{r}
 # generate prediction
@@ -293,7 +295,10 @@ ad%>%
   count()
 ```
 
-##Changing Policies
+
+# Part 3: Changing Policies
+
+Look at SAT first:
 ```{r}
 # generate prediction from our model
 ad_pred <- ad_result%>%
@@ -305,6 +310,7 @@ ad_pred %>%
   group_by(sat >= 13, .pred_class)%>%
   count()
 ```
+There are only 13 students with higher-than-1300 SAT who did not yield, while students with lower scores (1104) are the majority. This makes achiveing the goal of average 1300 SAT difficult.
 ```{r}
 # ad_np%>%
 #   filter(.pred_class=="Yes")%>%
@@ -323,24 +329,28 @@ ad_pred_filtered <- ad_pred %>%
   summarize(mean(sat * 100))
 ad_pred_filtered
 ```
+Even if we admit all students who either yielded or have scores >=1300, the average SAT is increased to 1235 but still below the expected level.
 
-Changing our financial aid policy for students who have higher SAT scores, such that students with SAT score higher than 1300 could get a deduction of \$40k in their tuition for every 100 score they exceeded the threshold, while students with lower scores will be added \$5k for every 100 score.
+Changing our financial aid policy:
+1. for students who have higher SAT scores, such that students with SAT score higher than 1350 could get a deduction of \$30k in their tuition for every 100 score they exceeded the threshold, while students with lower scores will be added \$20k for every 100 score below the threshold.
+2. deduct \$28k for low-income students whose family income is less than $50k per year.
+3. charge students whose family income is higher than $180k per year an additional $50k.
 ```{r}
 ad_np<-ad%>%
-  mutate(net_price=ifelse(sat>=13.50, 
+  mutate(net_price=ifelse(sat>=13, 
                               net_price - (sat-13)*30,
                               net_price - (sat-13)*20))
 ad_np <- ad_np %>%
   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
 
 ad_np <- ad_np %>%
-  mutate(net_price = ifelse(income <= 50, -28, net_price))
+  mutate(net_price = ifelse(income <= 50, -28, net_price)) #allow negative net price, meaning that the school will give scholarship to those low-income students to attract them
 
 ad_np <- ad_np%>%
-  mutate(net_price = ifelse(income >= 180, 50, net_price))
+  mutate(net_price = ifelse(income >= 180, 50, net_price)) #charge high-income students more money to balance our budget and total number of enrolled students
 ```
 
-# Generate prediction for the new policy
+# Generate predictions for the new policy
 ```{r}
 # generate predictions
 ad_np<-ad_result%>%
@@ -372,8 +382,10 @@ ad_np %>%
   filter(income<=50)%>%
   count()
 ```
-We saw the mean sat score is increased to 1239, and the net price ($30,572,784) is still above the required level, while the number of students (1390) is within expected, with 27 low income student.
+We saw the mean sat score is increased to 1236, and the net price $31,480,006 is still above the required level, the number of students becomes 1459 which is within expected, and we increased the number of low-income students to 284 that exceeds the expectation.
 
+
+********Other Attempts********
 Add another policy: deduct $30k for students whose family income is below $50,000
 ```{r}
 ad_np<-ad%>%
