@@ -1,0 +1,1247 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Guided Exercise 4},
+  pdfauthor={Zhirui Zhang, Aaron Guo},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Guided Exercise 4}
+\author{Zhirui Zhang, Aaron Guo}
+\date{12/16/2021}
+
+\begin{document}
+\maketitle
+
+\hypertarget{the-case}{%
+\subsection{The Case}\label{the-case}}
+
+You've been hired as the data science team for a liberal arts college.
+The college currently has an entering class of about 1,500 students, and
+collects 32 million in tuition revenue from those students. Recent
+increases in endowment income mean that the college can forego some of
+its tuition revenue in order to change the profile of admitted students.
+
+\hypertarget{the-college-president-and-the-board-of-trustees-have-two-strategic-goals}{%
+\subsection{The college president and the board of trustees have two
+strategic
+goals:}\label{the-college-president-and-the-board-of-trustees-have-two-strategic-goals}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Increase the average SAT score to 1300
+\item
+  Enroll at least 200 more students with incomes less than \$50,000
+\item
+  Don't allow tuition revenues from first-year students to drop to less
+  than \$30 million
+\item
+  Keep the number of enrolled students between 1,450 and 1,550
+\end{enumerate}
+
+\hypertarget{your-job}{%
+\subsection{Your Job}\label{your-job}}
+
+Your job is to come up with a strategy to accomplish the
+administration's goals. You'll need to incorporate the following
+elements into your two page memo for the president and the board of
+trustees. Use conditional means to describe the probability of enrolling
+once admitted (yield) for different groups of students. Create a model
+that accurately predicts the yield for admitted students. Describe the
+accuracy of this model and its key findings clearly. Use the estimates
+from this model to adjust the current pricing strategy to induce other
+students to enroll, given the above constraints.Describe your approach
+clearly. Predict the results of your change in pricing strategy. There
+are lots of ways to accomplish all of the above. Remember that you need
+to write up your findings in a nice narrative, including charts and
+tables to make your key points. If you think there are some ethical
+implications to your approach, describe those as well.
+
+\hypertarget{what-to-submit}{%
+\subsection{What to Submit}\label{what-to-submit}}
+
+The document describing the above should be 2-4 pages. You can ``knit''
+the document in html or pdf from Rmarkdown, or you can create a separate
+Word (google doc) or pdf document. You need to submit BOTH your Rmd file
+AND your written summary.
+
+\hypertarget{cleaning-up}{%
+\subsection{Cleaning up}\label{cleaning-up}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Clear variables}
+\FunctionTok{rm}\NormalTok{(}\AttributeTok{list=}\FunctionTok{ls}\NormalTok{())}
+\CommentTok{\# Clear all plots}
+\FunctionTok{graphics.off}\NormalTok{()}
+\CommentTok{\# Clear the console}
+\FunctionTok{cat}\NormalTok{(}\StringTok{"}\SpecialCharTok{\textbackslash{}014}\StringTok{"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\newpage{}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{if}\NormalTok{ (}\FunctionTok{Sys.info}\NormalTok{()[[}\DecValTok{4}\NormalTok{]] }\SpecialCharTok{==} \StringTok{"AaronGuo{-}MacBookPro"}\NormalTok{) \{}
+  \FunctionTok{setwd}\NormalTok{(}\StringTok{"\textasciitilde{}/Programming/Vanderbilt/DS/DS1000/projects/DS{-}1000/"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{set-up}{%
+\subsection{Set up}\label{set-up}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(modelr)}
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.5     v dplyr   1.0.7
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.0.1     v forcats 0.5.1
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidymodels)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Registered S3 method overwritten by 'tune':
+##   method                   from   
+##   required_pkgs.model_spec parsnip
+\end{verbatim}
+
+\begin{verbatim}
+## -- Attaching packages -------------------------------------- tidymodels 0.1.4 --
+\end{verbatim}
+
+\begin{verbatim}
+## v broom        0.7.9      v rsample      0.1.0 
+## v dials        0.0.10     v tune         0.1.6 
+## v infer        1.0.0      v workflows    0.2.3 
+## v modeldata    0.1.1      v workflowsets 0.1.0 
+## v parsnip      0.1.7      v yardstick    0.0.8 
+## v recipes      0.1.17
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ----------------------------------------- tidymodels_conflicts() --
+## x broom::bootstrap() masks modelr::bootstrap()
+## x scales::discard()  masks purrr::discard()
+## x dplyr::filter()    masks stats::filter()
+## x recipes::fixed()   masks stringr::fixed()
+## x dplyr::lag()       masks stats::lag()
+## x yardstick::mae()   masks modelr::mae()
+## x yardstick::mape()  masks modelr::mape()
+## x yardstick::rmse()  masks modelr::rmse()
+## x yardstick::spec()  masks readr::spec()
+## x recipes::step()    masks stats::step()
+## * Use suppressPackageStartupMessages() to eliminate package startup messages
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(knitr)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\OtherTok{\textless{}{-}}\FunctionTok{read\_rds}\NormalTok{(}\StringTok{"admit\_data.rds"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{part-1-use-conditional-means-to-describe-yield-by-different-groups}{%
+\section{Part 1: Use conditional means to describe yield by different
+groups}\label{part-1-use-conditional-means-to-describe-yield-by-different-groups}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by income}
+\NormalTok{ad\_income }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{income\_decile =} \FunctionTok{ntile}\NormalTok{(income, }\DecValTok{10}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(income\_decile) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{min\_income =} \FunctionTok{min}\NormalTok{(income),}
+            \AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\NormalTok{ad\_income}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    income_decile min_income pct_yield
+##            <int>      <dbl>     <dbl>
+##  1             1      8844.     0.205
+##  2             2     41483.     0.265
+##  3             3     55177.     0.447
+##  4             4     68818.     0.591
+##  5             5     82099.     0.651
+##  6             6     99895.     0.809
+##  7             7    119776.     0.884
+##  8             8    143791.     0.967
+##  9             9    178036.     1    
+## 10            10    241071.     1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# plot income vs yield}
+\NormalTok{ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{income, }\AttributeTok{y=}\NormalTok{yield)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{coord\_trans}\NormalTok{(}\AttributeTok{x=}\StringTok{\textquotesingle{}log10\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Income ($)"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Yield"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by sat}
+\NormalTok{ad\_sat }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sat\_decile =} \FunctionTok{ntile}\NormalTok{(sat, }\DecValTok{10}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(sat\_decile) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{min\_sat =} \FunctionTok{min}\NormalTok{(sat),}
+            \AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\NormalTok{ad\_sat}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    sat_decile min_sat pct_yield
+##         <int>   <dbl>     <dbl>
+##  1          1   1000      0.405
+##  2          2   1072.     0.474
+##  3          3   1114.     0.488
+##  4          4   1145.     0.577
+##  5          5   1173.     0.581
+##  6          6   1200.     0.8  
+##  7          7   1227.     0.819
+##  8          8   1252.     0.837
+##  9          9   1285.     0.884
+## 10         10   1329.     0.953
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{sat, }\AttributeTok{y=}\NormalTok{yield)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"SAT score"}\NormalTok{, }\AttributeTok{y=}\StringTok{"yield"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by gpa}
+\NormalTok{ad\_gpa }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{gpa\_decile =} \FunctionTok{ntile}\NormalTok{(gpa, }\DecValTok{10}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(gpa\_decile) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{min\_gpa =} \FunctionTok{min}\NormalTok{(gpa),}
+            \AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }
+
+\NormalTok{ad\_gpa}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    gpa_decile min_gpa pct_yield
+##         <int>   <dbl>     <dbl>
+##  1          1    2.8      0.456
+##  2          2    3.43     0.521
+##  3          3    3.55     0.595
+##  4          4    3.64     0.609
+##  5          5    3.72     0.637
+##  6          6    3.79     0.730
+##  7          7    3.86     0.749
+##  8          8    3.94     0.795
+##  9          9    4        0.865
+## 10         10    4        0.860
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by visit}
+\NormalTok{ad\_visit }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(visit) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{() }
+
+\NormalTok{ad\_visit}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   visit pct_yield
+##   <dbl>     <dbl>
+## 1     0     0.644
+## 2     1     0.736
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by legacy}
+\NormalTok{ad\_legacy }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(legacy) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\NormalTok{ad\_legacy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   legacy pct_yield
+##    <dbl>     <dbl>
+## 1      0     0.641
+## 2      1     0.780
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by registered }
+\NormalTok{ad\_registered }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(sent\_scores) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\NormalTok{ad\_registered}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 2 x 2
+##   sent_scores pct_yield
+##         <dbl>     <dbl>
+## 1           0     0.651
+## 2           1     0.805
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by distance}
+\NormalTok{ad\_distance }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{log\_distance\_decile =} \FunctionTok{ntile}\NormalTok{(}\FunctionTok{log}\NormalTok{(distance), }\DecValTok{10}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(log\_distance\_decile) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{min\_distance =} \FunctionTok{min}\NormalTok{(distance),}
+            \AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\NormalTok{ad\_distance}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    log_distance_decile min_distance pct_yield
+##                  <int>        <dbl>     <dbl>
+##  1                   1         2.70     0.716
+##  2                   2        28.4      0.656
+##  3                   3        43.5      0.684
+##  4                   4        59.2      0.628
+##  5                   5        78.5      0.698
+##  6                   6       100.       0.670
+##  7                   7       128.       0.730
+##  8                   8       169.       0.674
+##  9                   9       229.       0.670
+## 10                  10       375.       0.693
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# by net price}
+\NormalTok{ad\_net\_price }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{net\_price\_decile =} \FunctionTok{ntile}\NormalTok{(net\_price, }\DecValTok{10}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(net\_price\_decile) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{min\_price =} \FunctionTok{min}\NormalTok{(net\_price),}
+            \AttributeTok{pct\_yield =} \FunctionTok{mean}\NormalTok{(yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ungroup}\NormalTok{()}
+
+\NormalTok{ad\_net\_price}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 3
+##    net_price_decile min_price pct_yield
+##               <int>     <dbl>     <dbl>
+##  1                1        0      0.512
+##  2                2        0      0.786
+##  3                3     9464.     0.884
+##  4                4    11689.     0.921
+##  5                5    13053.     0.926
+##  6                6    14109.     0.414
+##  7                7    22505.     0.279
+##  8                8    31248.     0.419
+##  9                9    43766.     0.819
+## 10               10    45000      0.860
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{net\_price, }\AttributeTok{y=}\NormalTok{yield)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{x=}\StringTok{"Net price for attendance ($)"}\NormalTok{, }\AttributeTok{y=}\StringTok{"Yield"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+\end{verbatim}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-11-1.pdf}
+
+\hypertarget{part-1.2-analysis-of-students-from-low-income-households-50.000year}{%
+\subsection{Part 1.2: Analysis of students from low-income households
+(\textless\$50.000/year)}\label{part-1.2-analysis-of-students-from-low-income-households-50.000year}}
+
+\hypertarget{data-wrangling}{%
+\subsubsection{Data Wrangling}\label{data-wrangling}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\OtherTok{\textless{}{-}}\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{yield\_f=}\FunctionTok{as\_factor}\NormalTok{(}\FunctionTok{ifelse}\NormalTok{(yield}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,}\StringTok{"Yes"}\NormalTok{,}\StringTok{"No"}\NormalTok{)))}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{yield\_f=}\FunctionTok{relevel}\NormalTok{(yield\_f,}\AttributeTok{ref=}\StringTok{"No"}\NormalTok{))}\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{sat=}\NormalTok{sat}\SpecialCharTok{/}\DecValTok{100}\NormalTok{,}
+         \AttributeTok{income=}\NormalTok{income}\SpecialCharTok{/}\DecValTok{1000}\NormalTok{,}
+         \AttributeTok{distance=}\NormalTok{distance}\SpecialCharTok{/}\DecValTok{1000}\NormalTok{,}
+         \AttributeTok{net\_price=}\NormalTok{net\_price}\SpecialCharTok{/}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{filter-out-low-income-students-income-50000}{%
+\subsubsection{Filter out low-income students (income \textless{}
+\$50,000)}\label{filter-out-low-income-students-income-50000}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_lowincome }\OtherTok{\textless{}{-}}\NormalTok{ ad }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(income }\SpecialCharTok{\textless{}} \DecValTok{50000}\SpecialCharTok{/}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{split-the-data-for-analysis}{%
+\subsubsection{Split the data for
+analysis}\label{split-the-data-for-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{split\_data\_glm }\OtherTok{\textless{}{-}} \FunctionTok{initial\_split}\NormalTok{(ad\_lowincome)}
+
+\NormalTok{ad\_train\_glm }\OtherTok{\textless{}{-}} \FunctionTok{training}\NormalTok{(split\_data\_glm)}
+
+\NormalTok{ad\_test\_glm }\OtherTok{\textless{}{-}} \FunctionTok{testing}\NormalTok{(split\_data\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{logistical-regression-analysis}{%
+\subsubsection{Logistical regression
+analysis}\label{logistical-regression-analysis}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{logit\_mod}\OtherTok{\textless{}{-}}\FunctionTok{logistic\_reg}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{set\_engine}\NormalTok{(}\StringTok{"glm"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{set\_mode}\NormalTok{(}\StringTok{"classification"}\NormalTok{)}
+
+\NormalTok{admit\_formula }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}
+                  \StringTok{"yield\_f\textasciitilde{}}
+\StringTok{                          legacy+}
+\StringTok{                          visit+}
+\StringTok{                          registered+}
+\StringTok{                          sent\_scores+}
+\StringTok{                          sat+}
+\StringTok{                          income+}
+\StringTok{                          gpa+}
+\StringTok{                          distance+}
+\StringTok{                          net\_price"}\NormalTok{)}
+
+\NormalTok{admit\_recipe}\OtherTok{\textless{}{-}}\FunctionTok{recipe}\NormalTok{(admit\_formula,ad)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{step\_log}\NormalTok{(distance)}
+
+\NormalTok{ad\_wf}\OtherTok{\textless{}{-}}\FunctionTok{workflow}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_model}\NormalTok{(logit\_mod)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_recipe}\NormalTok{(admit\_recipe)}
+
+\NormalTok{ad\_result}\OtherTok{\textless{}{-}}\NormalTok{ad\_wf}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fit}\NormalTok{(ad\_train\_glm)}
+
+\FunctionTok{tidy}\NormalTok{(ad\_result)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##    term        estimate std.error statistic   p.value
+##    <chr>          <dbl>     <dbl>     <dbl>     <dbl>
+##  1 (Intercept) -12.7       4.25      -3.00  0.00269  
+##  2 legacy        0.397     0.443      0.897 0.370    
+##  3 visit         0.284     0.362      0.784 0.433    
+##  4 registered    0.907     0.351      2.59  0.00974  
+##  5 sent_scores   0.647     0.486      1.33  0.184    
+##  6 sat           0.189     0.358      0.528 0.598    
+##  7 income        0.0615    0.0220     2.79  0.00526  
+##  8 gpa           1.26      0.812      1.55  0.121    
+##  9 distance     -0.739     0.187     -3.95  0.0000776
+## 10 net_price    -0.0346    0.0308    -1.12  0.262
+\end{verbatim}
+
+\hypertarget{getting-roc}{%
+\subsubsection{Getting ROC}\label{getting-roc}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# generate prediction}
+\NormalTok{ad\_wf\_glm\_pred }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(ad\_test\_glm) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(ad\_test\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{mean\_yield =} \FunctionTok{mean}\NormalTok{(yield))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   mean_yield
+## 1  0.6818605
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# accuracy}
+\NormalTok{ad\_wf\_glm\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{accuracy}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{estimate=}\NormalTok{.pred\_class, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric  .estimator .estimate
+##   <chr>    <chr>          <dbl>
+## 1 accuracy binary         0.791
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# sensitivity}
+\NormalTok{ad\_wf\_glm\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{sens}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{estimate=}\NormalTok{.pred\_class, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 sens    binary         0.176
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# specificity}
+\NormalTok{ad\_wf\_glm\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{spec}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{estimate=}\NormalTok{.pred\_class, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 spec    binary         0.942
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ROC curve}
+\NormalTok{ad\_wf\_glm\_roc }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(ad\_test\_glm, }\AttributeTok{type=}\StringTok{"prob"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(ad\_test\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_wf\_glm\_roc }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{roc\_curve}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{.estimate=}\NormalTok{.pred\_Yes, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{autoplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-22-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_wf\_glm\_roc }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{roc\_auc}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{.estimate=}\NormalTok{.pred\_Yes, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 roc_auc binary         0.700
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Extract results}
+\NormalTok{ad\_fit }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result }\SpecialCharTok{\%\textgreater{}\%} \FunctionTok{extract\_fit\_parsnip}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{what-if-the-net-price-is-negative}{%
+\subsubsection{what if the net price is
+negative}\label{what-if-the-net-price-is-negative}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hypo\_data }\OtherTok{\textless{}{-}}\NormalTok{ ad\_lowincome }\SpecialCharTok{\%\textgreater{}\%}
+  \CommentTok{\# supply the mode (for each variable) of the entire dataset }
+  \FunctionTok{data\_grid}\NormalTok{(}\AttributeTok{.model=}\NormalTok{ad\_fit}\SpecialCharTok{$}\NormalTok{fit,}
+            \AttributeTok{net\_price =} \FunctionTok{seq}\NormalTok{(}\AttributeTok{from=}\SpecialCharTok{{-}}\DecValTok{5}\NormalTok{, }\AttributeTok{to=}\DecValTok{0}\NormalTok{, }\AttributeTok{by=}\FloatTok{0.05}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_negativeprice }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(hypo\_data,}\AttributeTok{type=}\StringTok{"prob"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(hypo\_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_lowincome }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{net\_price, }\AttributeTok{y=}\NormalTok{yield)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_negativeprice }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{net\_price, }\AttributeTok{y=}\NormalTok{.pred\_Yes)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{geom\_smooth}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+\end{verbatim}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-27-2.pdf}
+
+\hypertarget{part-2-create-a-model-to-predict-yield-and-describe-accuracy}{%
+\section{Part 2: Create a model to predict yield, and describe
+accuracy}\label{part-2-create-a-model-to-predict-yield-and-describe-accuracy}}
+
+\hypertarget{split-data}{%
+\subsubsection{Split Data}\label{split-data}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# set seed }
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{6666}\NormalTok{)}
+
+\NormalTok{split\_data\_glm }\OtherTok{\textless{}{-}} \FunctionTok{initial\_split}\NormalTok{(ad)}
+
+\NormalTok{ad\_train\_glm }\OtherTok{\textless{}{-}} \FunctionTok{training}\NormalTok{(split\_data\_glm)}
+
+\NormalTok{ad\_test\_glm }\OtherTok{\textless{}{-}} \FunctionTok{testing}\NormalTok{(split\_data\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{setting-the-regression-model}{%
+\subsubsection{Setting the Regression
+Model}\label{setting-the-regression-model}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{logit\_mod}\OtherTok{\textless{}{-}}\FunctionTok{logistic\_reg}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{set\_engine}\NormalTok{(}\StringTok{"glm"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{set\_mode}\NormalTok{(}\StringTok{"classification"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Create formula and recipe:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{admit\_formula }\OtherTok{\textless{}{-}} \FunctionTok{as.formula}\NormalTok{(}
+                  \StringTok{"yield\_f\textasciitilde{}}
+\StringTok{                          legacy+}
+\StringTok{                          visit+}
+\StringTok{                          registered+}
+\StringTok{                          sent\_scores+}
+\StringTok{                          sat+}
+\StringTok{                          income+}
+\StringTok{                          gpa+}
+\StringTok{                          distance+}
+\StringTok{                          net\_price"}\NormalTok{)}
+
+\NormalTok{admit\_recipe}\OtherTok{\textless{}{-}}\FunctionTok{recipe}\NormalTok{(admit\_formula,ad)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{step\_log}\NormalTok{(distance)}
+\end{Highlighting}
+\end{Shaded}
+
+add workflow:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_wf}\OtherTok{\textless{}{-}}\FunctionTok{workflow}\NormalTok{()}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_model}\NormalTok{(logit\_mod)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{add\_recipe}\NormalTok{(admit\_recipe)}
+\end{Highlighting}
+\end{Shaded}
+
+fit the model:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_result}\OtherTok{\textless{}{-}}\NormalTok{ad\_wf}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{fit}\NormalTok{(ad\_train\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
+\end{verbatim}
+
+see the results:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{tidy}\NormalTok{(ad\_result)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 10 x 5
+##    term        estimate std.error statistic  p.value
+##    <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+##  1 (Intercept) -10.6      1.81       -5.86  4.57e- 9
+##  2 legacy        0.568    0.178       3.19  1.43e- 3
+##  3 visit         0.237    0.159       1.49  1.35e- 1
+##  4 registered    0.483    0.154       3.15  1.64e- 3
+##  5 sent_scores   0.771    0.209       3.69  2.25e- 4
+##  6 sat          -0.112    0.146      -0.766 4.44e- 1
+##  7 income        0.0524   0.00362    14.5   1.58e-47
+##  8 gpa           2.08     0.399       5.21  1.86e- 7
+##  9 distance     -0.405    0.0810     -5.01  5.54e- 7
+## 10 net_price    -0.0571   0.00880    -6.49  8.49e-11
+\end{verbatim}
+
+\hypertarget{getting-roc-1}{%
+\subsubsection{Getting ROC}\label{getting-roc-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# generate prediction}
+\NormalTok{ad\_wf\_glm\_pred }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(ad\_test\_glm) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(ad\_test\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{mean\_yield =} \FunctionTok{mean}\NormalTok{(yield))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   mean_yield
+## 1  0.6818605
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# accuracy}
+\NormalTok{ad\_wf\_glm\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{accuracy}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{estimate=}\NormalTok{.pred\_class, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric  .estimator .estimate
+##   <chr>    <chr>          <dbl>
+## 1 accuracy binary         0.848
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# sensitivity}
+\NormalTok{ad\_wf\_glm\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{sens}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{estimate=}\NormalTok{.pred\_class, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 sens    binary         0.861
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# specificity}
+\NormalTok{ad\_wf\_glm\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{spec}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{estimate=}\NormalTok{.pred\_class, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 spec    binary         0.819
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ROC curve}
+\NormalTok{ad\_wf\_glm\_roc }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(ad\_test\_glm, }\AttributeTok{type=}\StringTok{"prob"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(ad\_test\_glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_wf\_glm\_roc }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{roc\_curve}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{.estimate=}\NormalTok{.pred\_Yes, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{autoplot}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Guided-Exercise-4_files/figure-latex/unnamed-chunk-40-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_wf\_glm\_roc }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{roc\_auc}\NormalTok{(}\AttributeTok{truth=}\NormalTok{yield\_f, }\AttributeTok{.estimate=}\NormalTok{.pred\_Yes, }\AttributeTok{event\_level=}\StringTok{"second"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 roc_auc binary         0.914
+\end{verbatim}
+
+\hypertarget{getting-the-baselines}{%
+\subsubsection{Getting the baselines}\label{getting-the-baselines}}
+
+The average SAT score: 1225
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(yield}\SpecialCharTok{==}\DecValTok{1}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#only focus on students that actually showed up}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{mean}\NormalTok{(sat) }\SpecialCharTok{*} \DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   mean(sat) * 100
+## 1        1225.941
+\end{verbatim}
+
+Number of currently enrolled students who come from families that make
+less than \$50,000 a year: 77; while there are 341 low-income students
+in total - We did not capture 264 of these students
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(yield}\SpecialCharTok{==}\DecValTok{1}\NormalTok{,income}\SpecialCharTok{\textless{}}\DecValTok{50}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    n
+## 1 77
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(income}\SpecialCharTok{\textless{}}\DecValTok{50}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     n
+## 1 341
+\end{verbatim}
+
+Amount of total revenue collected from first-year students:\$30,674,149
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(yield}\SpecialCharTok{==}\DecValTok{1}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{dollar}\NormalTok{(}\FunctionTok{sum}\NormalTok{(net\_price) }\SpecialCharTok{*} \DecValTok{1000}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   dollar(sum(net_price) * 1000)
+## 1                   $30,674,149
+\end{verbatim}
+
+Number of students currently yield: 1466
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(yield}\SpecialCharTok{==}\DecValTok{1}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      n
+## 1 1466
+\end{verbatim}
+
+\hypertarget{part-3-changing-policies}{%
+\subsubsection{Part 3: Changing
+Policies}\label{part-3-changing-policies}}
+
+Look at SAT first:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# generate prediction from our model}
+\NormalTok{ad\_pred }\OtherTok{\textless{}{-}}\NormalTok{ ad\_result}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(ad)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(ad)}
+
+\CommentTok{\# check predicted enrollment based on whether SAT is higher than 1300}
+\NormalTok{ad\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(sat }\SpecialCharTok{\textgreater{}=} \DecValTok{13}\NormalTok{, .pred\_class)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4 x 3
+## # Groups:   sat >= 13, .pred_class [4]
+##   `sat >= 13` .pred_class     n
+##   <lgl>       <fct>       <int>
+## 1 FALSE       No            703
+## 2 FALSE       Yes          1104
+## 3 TRUE        No             13
+## 4 TRUE        Yes           330
+\end{verbatim}
+
+There are only 13 students with higher-than-1300 SAT who did not yield,
+while students with lower scores (1104) are the majority. This makes
+achiveing the goal of average 1300 SAT difficult.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# ad\_np\%\textgreater{}\%}
+\CommentTok{\#   filter(.pred\_class=="Yes")\%\textgreater{}\%}
+\CommentTok{\#   summarize(mean(sat))}
+\CommentTok{\# ad\_pred\_1 \textless{}{-} ad\_pred \%\textgreater{}\% }
+\CommentTok{\#   filter(sat \textless{} 13 \& .pred\_class=="No")}
+\CommentTok{\# ad\_pred\_2 \textless{}{-} ad\_pred \%\textgreater{}\%}
+\CommentTok{\#   filter(sat \textless{} 13 \& .pred\_class=="Yes")}
+\CommentTok{\# ad\_pred\_3 \textless{}{-} ad\_pred \%\textgreater{}\%}
+\CommentTok{\#   filter(sat \textgreater{} 13 \& .pred\_class=="No")}
+\CommentTok{\# ad\_predp\_4 \textless{}{-} ad\_pred \%\textgreater{}\%}
+\CommentTok{\#   filter(sat \textgreater{} 13 \& .pred\_class=="Yes")}
+\CommentTok{\# ad\_pred\_combined \textless{}{-} rbind(ad\_pred\_1, ad\_pred\_2, ad\_pred\_3)}
+\NormalTok{ad\_pred\_filtered }\OtherTok{\textless{}{-}}\NormalTok{ ad\_pred }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(sat }\SpecialCharTok{\textgreater{}=} \DecValTok{13} \SpecialCharTok{|}\NormalTok{ .pred\_class}\SpecialCharTok{==}\StringTok{"Yes"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\#to have students who either yielded or have scores \textgreater{}=1300}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{mean}\NormalTok{(sat }\SpecialCharTok{*} \DecValTok{100}\NormalTok{))}
+\NormalTok{ad\_pred\_filtered}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   `mean(sat * 100)`
+##               <dbl>
+## 1             1235.
+\end{verbatim}
+
+Even if we admit all students who either yielded or have scores
+\textgreater=1300, the average SAT is increased to 1235 but still below
+the expected level.
+
+Changing our financial aid policy: 1. for students who have higher SAT
+scores, such that students with SAT score higher than 1350 could get a
+deduction of \$30k in their tuition for every 100 score they exceeded
+the threshold, while students with lower scores will be added \$20k for
+every 100 score below the threshold. 2. deduct \$28k for low-income
+students whose family income is less than \$50k per year. 3. charge
+students whose family income is higher than \$180k per year an
+additional \$50k.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ad\_np}\OtherTok{\textless{}{-}}\NormalTok{ad}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{net\_price=}\FunctionTok{ifelse}\NormalTok{(sat}\SpecialCharTok{\textgreater{}=}\DecValTok{13}\NormalTok{, }
+\NormalTok{                              net\_price }\SpecialCharTok{{-}}\NormalTok{ (sat}\DecValTok{{-}13}\NormalTok{)}\SpecialCharTok{*}\DecValTok{30}\NormalTok{,}
+\NormalTok{                              net\_price }\SpecialCharTok{{-}}\NormalTok{ (sat}\DecValTok{{-}13}\NormalTok{)}\SpecialCharTok{*}\DecValTok{20}\NormalTok{))}
+\NormalTok{ad\_np }\OtherTok{\textless{}{-}}\NormalTok{ ad\_np }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{net\_price=}\FunctionTok{ifelse}\NormalTok{(net\_price}\SpecialCharTok{\textless{}}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,net\_price)) }\CommentTok{\#if anybody has a net price of 0, change it to 0, otherwise leave it as it is{-}\textgreater{} because we don\textquotesingle{}t charge people negative tuition!}
+
+\NormalTok{ad\_np }\OtherTok{\textless{}{-}}\NormalTok{ ad\_np }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{net\_price =} \FunctionTok{ifelse}\NormalTok{(income }\SpecialCharTok{\textless{}=} \DecValTok{50}\NormalTok{, }\SpecialCharTok{{-}}\DecValTok{28}\NormalTok{, net\_price)) }\CommentTok{\#allow negative net price, meaning that the school will give scholarship to those low{-}income students to attract them}
+
+\NormalTok{ad\_np }\OtherTok{\textless{}{-}}\NormalTok{ ad\_np}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{net\_price =} \FunctionTok{ifelse}\NormalTok{(income }\SpecialCharTok{\textgreater{}=} \DecValTok{180}\NormalTok{, }\DecValTok{50}\NormalTok{, net\_price)) }\CommentTok{\#charge high{-}income students more money to balance our budget and total number of enrolled students}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{generate-predictions-for-the-new-policy}{%
+\subsubsection{Generate predictions for the new
+policy}\label{generate-predictions-for-the-new-policy}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# generate predictions}
+\NormalTok{ad\_np}\OtherTok{\textless{}{-}}\NormalTok{ad\_result}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{predict}\NormalTok{(ad\_np)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{bind\_cols}\NormalTok{(ad\_np)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculate the total revenue to the school from students now predicted to enroll}
+\NormalTok{ad\_np}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(.pred\_class}\SpecialCharTok{==}\StringTok{"Yes"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{dollar}\NormalTok{(}\FunctionTok{sum}\NormalTok{(net\_price)}\SpecialCharTok{*}\DecValTok{1000}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   `dollar(sum(net_price) * 1000)`
+##   <chr>                          
+## 1 $31,480,006
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculate the SAT average for students now predicted to enroll}
+\NormalTok{ad\_np}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(.pred\_class}\SpecialCharTok{==}\StringTok{"Yes"}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\FunctionTok{mean}\NormalTok{(sat)}\SpecialCharTok{*}\DecValTok{100}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##   `mean(sat) * 100`
+##               <dbl>
+## 1             1236.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculate how many students are now predicted to enroll}
+\NormalTok{ad\_np }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(.pred\_class}\SpecialCharTok{==}\StringTok{"Yes"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##       n
+##   <int>
+## 1  1459
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# calculate how many low income students are now predicted to enroll}
+\NormalTok{ad\_np }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(.pred\_class}\SpecialCharTok{==}\StringTok{"Yes"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{filter}\NormalTok{(income}\SpecialCharTok{\textless{}=}\DecValTok{50}\NormalTok{)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{count}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 1 x 1
+##       n
+##   <int>
+## 1   284
+\end{verbatim}
+
+We saw the mean sat score is increased to 1236, and the net price
+\$31,480,006 is still above the required level, the number of students
+becomes 1459 which is within expected, and we increased the number of
+low-income students to 284 that exceeds the expectation.
+
+\end{document}

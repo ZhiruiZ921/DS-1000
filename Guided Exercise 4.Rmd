@@ -2,19 +2,21 @@
 title: "Guided Exercise 4"
 author: "Zhirui Zhang, Aaron Guo"
 date: "12/16/2021"
-output: document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
-#The Case
+## The Case
 You’ve been hired as the data science team for a liberal arts college. The college currently has an entering class of about 1,500 students, and collects 32 million in tuition revenue from those students. Recent increases in endowment income mean that the college can forego some of its tuition revenue in order to change the profile of admitted students.
 
-#The college president and the board of trustees have two strategic goals:
+## The college president and the board of trustees have two strategic goals:
 1. Increase the average SAT score to 1300
 2. Enroll at least 200 more students with incomes less than \$50,000
 3. Don't allow tuition revenues from first-year students to drop to less than \$30 million
 4. Keep the number of enrolled students between 1,450 and 1,550
 
-#Your Job
+## Your Job
 Your job is to come up with a strategy to accomplish the administration’s goals.
 You’ll need to incorporate the following elements into your two page memo for the president and the board of trustees.
 Use conditional means to describe the probability of enrolling once admitted (yield) for different groups of students.
@@ -23,7 +25,7 @@ Use the estimates from this model to adjust the current pricing strategy to indu
 Predict the results of your change in pricing strategy.
 There are lots of ways to accomplish all of the above. Remember that you need to write up your findings in a nice narrative, including charts and tables to make your key points. If you think there are some ethical implications to your approach, describe those as well.
 
-#What to Submit
+## What to Submit
 The document describing the above should be 2-4 pages. You can “knit” the document in html or pdf from Rmarkdown, or you can create a separate Word (google doc) or pdf document. You need to submit BOTH your Rmd file AND your written summary.
 
 ## Cleaning up
@@ -44,6 +46,7 @@ if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
 library(modelr)
 library(tidyverse)
 library(tidymodels)
+library(knitr)
 ```
 
 ```{r}
@@ -63,10 +66,14 @@ ad_income <- ad %>%
 
 ad_income
 
-# ad %>%
-#   ggplot(aes(x=income, y=yield)) +
-#   geom_point() +
-#   geom_smooth()
+# plot income vs yield
+ad %>%
+  ggplot(aes(x=income, y=yield)) +
+  geom_point() +
+  geom_smooth() +
+  coord_trans(x='log10') + 
+  labs(x="Income ($)", y="Yield", title = "Yield vs. Income")
+  
 ```
 
 ```{r}
@@ -80,10 +87,11 @@ ad_sat <- ad %>%
 
 ad_sat
 
-# ad %>%
-#   ggplot(aes(x=sat, y=yield)) +
-#   geom_point() +
-#   geom_smooth()
+ad %>%
+  ggplot(aes(x=sat, y=yield)) +
+  geom_point() +
+  geom_smooth() + 
+  labs(x="SAT score", y="Yield", title = "Yield vs. SAT")
 ```
 
 ```{r}
@@ -151,16 +159,16 @@ ad_net_price <- ad %>%
 
 ad_net_price
 
-# ad %>%
-#   ggplot(aes(x=net_price, y=yield)) +
-#   geom_point() +
-#   geom_smooth()
+ad %>%
+  ggplot(aes(x=net_price, y=yield)) +
+  geom_point() +
+  geom_smooth() +
+  labs(x="Net price for attendance ($)", y="Yield", title="Yield vs. Net Price")
 ```
 
+## Part 1.2: Analysis of students from low-income households (<$50.000/year)
 
-# Part 2: Create a model to predict yield, and describe accuracy
-
-##Data Wrangling
+### Data Wrangling
 ```{r}
 ad<-ad%>%
   mutate(yield_f=as_factor(ifelse(yield==1,"Yes","No")))%>%
@@ -170,26 +178,29 @@ ad<-ad%>%
          distance=distance/1000,
          net_price=net_price/1000)
 ```
-## Split Data 
+### Filter out low-income students (income < $50,000)
+```{r}
+ad_lowincome <- ad %>%
+  filter(income < 50000/1000)
+```
+
+### Split the data for analysis
 ```{r}
 # set seed 
 set.seed(6666)
 
-split_data_glm <- initial_split(ad)
+split_data_glm <- initial_split(ad_lowincome)
 
 ad_train_glm <- training(split_data_glm)
 
 ad_test_glm <- testing(split_data_glm)
 ```
-
-## Setting the Regression Model
+### Logistical regression analysis
 ```{r}
 logit_mod<-logistic_reg()%>%
   set_engine("glm")%>%
   set_mode("classification")
-```
-Create formula and recipe:
-```{r}
+
 admit_formula <- as.formula(
                   "yield_f~
                           legacy+
@@ -204,24 +215,18 @@ admit_formula <- as.formula(
 
 admit_recipe<-recipe(admit_formula,ad)%>%
   step_log(distance)
-```
-add workflow:
-```{r}
+
 ad_wf<-workflow()%>%
   add_model(logit_mod)%>%
   add_recipe(admit_recipe)
-```
-fit the model:
-```{r}
+
 ad_result<-ad_wf%>%
   fit(ad_train_glm)
-```
-see the results:
-```{r}
+
 tidy(ad_result)
 ```
 
-## Getting ROC
+### Getting ROC
 ```{r}
 # generate prediction
 ad_wf_glm_pred <- ad_result %>%
@@ -264,13 +269,148 @@ ad_wf_glm_roc %>%
 
 ```
 
-##Getting the baselines
+```{r}
+# Extract results
+ad_fit <- ad_result %>% extract_fit_parsnip()
+```
+
+
+
+### what if the net price is negative
+```{r}
+hypo_data <- ad_lowincome %>%
+  # supply the mode (for each variable) of the entire dataset 
+  data_grid(.model=ad_fit$fit,
+            net_price = seq(from=-5, to=0, by=0.05))
+```
+```{r}
+ad_negativeprice <- ad_result%>%
+  predict(hypo_data,type="prob")%>%
+  bind_cols(hypo_data)
+```
+
+```{r}
+ad_lowincome %>%
+  ggplot(aes(x=net_price, y=yield)) + 
+  geom_point() +
+  geom_smooth() + 
+  labs(x="Net Price", y="Yield", title="Net Price vs. Yield for Low-Income Students (<$50,000/year)")
+ad_negativeprice %>%
+  ggplot(aes(x=net_price, y=.pred_Yes)) + 
+  geom_point() +
+  geom_smooth() +
+    labs(x="Net Price", y="Yield", title="Net Price vs. Yield for Low-Income Students (<$50,000/year) -- Negative Tuition")
+```
+
+
+# Part 2: Create a model to predict yield, and describe accuracy
+
+### Split Data 
+```{r}
+split_data_glm <- initial_split(ad)
+
+ad_train_glm <- training(split_data_glm)
+
+ad_test_glm <- testing(split_data_glm)
+```
+
+### Setting the Regression Model
+```{r}
+logit_mod<-logistic_reg()%>%
+  set_engine("glm")%>%
+  set_mode("classification")
+```
+Create formula and recipe:
+```{r}
+admit_formula <- as.formula(
+                  "yield_f~
+                          legacy+
+                          visit+
+                          registered+
+                          sent_scores+
+                          sat+
+                          income+
+                          gpa+
+                          distance+
+                          net_price")
+
+admit_recipe<-recipe(admit_formula,ad)%>%
+  step_log(distance)
+```
+add workflow:
+```{r}
+ad_wf<-workflow()%>%
+  add_model(logit_mod)%>%
+  add_recipe(admit_recipe)
+```
+fit the model:
+```{r}
+ad_result<-ad_wf%>%
+  fit(ad_train_glm)
+```
+see the results:
+```{r}
+tidy(ad_result)
+```
+
+### Getting ROC
+```{r}
+# generate prediction
+ad_wf_glm_pred <- ad_result %>%
+  predict(ad_test_glm) %>%
+  bind_cols(ad_test_glm)
+```
+```{r}
+ad %>% 
+  summarize(mean_yield = mean(yield))
+```
+```{r}
+# accuracy
+ad_wf_glm_pred %>%
+  accuracy(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# sensitivity
+ad_wf_glm_pred %>%
+  sens(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# specificity
+ad_wf_glm_pred %>%
+  spec(truth=yield_f, estimate=.pred_class, event_level="second")
+```
+```{r}
+# ROC curve
+ad_wf_glm_roc <- ad_result %>%
+  predict(ad_test_glm, type="prob") %>%
+  bind_cols(ad_test_glm)
+```
+```{r}
+ad_wf_glm_roc %>%
+  roc_curve(truth=yield_f, .estimate=.pred_Yes, event_level="second") %>%
+  autoplot()
+```
+```{r}
+ad_wf_glm_roc %>%
+  roc_auc(truth=yield_f, .estimate=.pred_Yes, event_level="second")
+
+```
+
+### Getting the baselines
 The average SAT score: 1225
 ```{r}
 ad%>%
   filter(yield==1)%>% #only focus on students that actually showed up
   summarize(mean(sat) * 100)
 ```
+we also want to see how many students have a SAT score that is higher than 1300, and how many in each group (>=1300 or <1300) enrolled
+```{r}
+# count enrollment by sat
+ad %>%
+  group_by(sat>=13, yield) %>%
+  count()
+```
+
 Number of currently enrolled students who come from families that make less than $50,000 a year: 77; while there are 341 low-income students in total
 - We did not capture 264 of these students 
 ```{r}
@@ -296,7 +436,7 @@ ad%>%
 ```
 
 
-# Part 3: Changing Policies
+### Part 3: Changing Policies
 
 Look at SAT first:
 ```{r}
@@ -350,7 +490,7 @@ ad_np <- ad_np%>%
   mutate(net_price = ifelse(income >= 180, 50, net_price)) #charge high-income students more money to balance our budget and total number of enrolled students
 ```
 
-# Generate predictions for the new policy
+### Generate predictions for the new policy
 ```{r}
 # generate predictions
 ad_np<-ad_result%>%
@@ -385,101 +525,101 @@ ad_np %>%
 We saw the mean sat score is increased to 1236, and the net price $31,480,006 is still above the required level, the number of students becomes 1459 which is within expected, and we increased the number of low-income students to 284 that exceeds the expectation.
 
 
-********Other Attempts********
-Add another policy: deduct $30k for students whose family income is below $50,000
-```{r}
-ad_np<-ad%>%
-  mutate(net_price=ifelse(sat>=13, 
-                              net_price - (sat-13)*40,
-                              net_price - (sat-13)*5))%>%
-  mutate(net_price=ifelse(income<=50, 
-                              net_price - 30,
-                              net_price))%>%
-  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
-```
-```{r}
-ad_np<-ad_result%>%
-  predict(ad_np)%>%
-  bind_cols(ad_np)
-```
-```{r}
-# calculate the total revenue to the school from students now predicted to enroll
-ad_np%>%
-  filter(.pred_class=="Yes")%>%
-  summarize(dollar(sum(net_price)*1000))
-```
-```{r}
-# calculate the SAT average for students now predicted to enroll
-ad_np%>%
-  filter(.pred_class=="Yes")%>%
-  summarize(mean(sat)*100)
-```
-```{r}
-# calculate how many students are now predicted to enroll
-ad_np %>%
-  filter(.pred_class=="Yes") %>%
-  count()
-```
-```{r}
-# calculate how many low income students are now predicted to enroll
-ad_np %>%
-  filter(.pred_class=="Yes") %>%
-  filter(income<=50)%>%
-  count()
-```
-We now have a total revenue of $30,275,183 (above expectation), an SAT average of 1237 (below expectation), a total number of enrollment of 1412 (below expectation), and 76 low income students (below expectation).
+<!-- ********Other Attempts******** -->
+<!-- Add another policy: deduct $30k for students whose family income is below $50,000 -->
+<!-- ```{r} -->
+<!-- ad_np<-ad%>% -->
+<!--   mutate(net_price=ifelse(sat>=13,  -->
+<!--                               net_price - (sat-13)*40, -->
+<!--                               net_price - (sat-13)*5))%>% -->
+<!--   mutate(net_price=ifelse(income<=50,  -->
+<!--                               net_price - 30, -->
+<!--                               net_price))%>% -->
+<!--   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition! -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- ad_np<-ad_result%>% -->
+<!--   predict(ad_np)%>% -->
+<!--   bind_cols(ad_np) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate the total revenue to the school from students now predicted to enroll -->
+<!-- ad_np%>% -->
+<!--   filter(.pred_class=="Yes")%>% -->
+<!--   summarize(dollar(sum(net_price)*1000)) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate the SAT average for students now predicted to enroll -->
+<!-- ad_np%>% -->
+<!--   filter(.pred_class=="Yes")%>% -->
+<!--   summarize(mean(sat)*100) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate how many students are now predicted to enroll -->
+<!-- ad_np %>% -->
+<!--   filter(.pred_class=="Yes") %>% -->
+<!--   count() -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate how many low income students are now predicted to enroll -->
+<!-- ad_np %>% -->
+<!--   filter(.pred_class=="Yes") %>% -->
+<!--   filter(income<=50)%>% -->
+<!--   count() -->
+<!-- ``` -->
+<!-- We now have a total revenue of $30,275,183 (above expectation), an SAT average of 1237 (below expectation), a total number of enrollment of 1412 (below expectation), and 76 low income students (below expectation). -->
 
-Add another policy: 
-```{r}
-ad_np<-ad%>%
-  mutate(net_price=ifelse(sat>=13, 
-                              net_price - (sat-13)*35,
-                              net_price - (sat-13)*5))%>%
-  mutate(net_price=ifelse(income<=50, #incentivize low income
-                              net_price - 30,
-                              net_price))%>%
-  mutate(net_price=ifelse(income>=150, #for high income
-                              net_price + 10,
-                              net_price))%>%
-  mutate(net_price=ifelse(gpa>=3.8, #gpa和yield也有positive correlation
-                              net_price - (gpa-3.8)*10,
-                              net_price))%>%
-  mutate(net_price=ifelse(sent_scores==1,#sent scores和yield的correlation最强
-                              net_price - 10,
-                              net_price))%>%
-  mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition!
-```
-```{r}
-ad_np<-ad_result%>%
-  predict(ad_np)%>%
-  bind_cols(ad_np)
-```
-```{r}
-# calculate the total revenue to the school from students now predicted to enroll
-ad_np%>%
-  filter(.pred_class=="Yes")%>%
-  summarize(dollar(sum(net_price)*1000))
-```
-```{r}
-# calculate the SAT average for students now predicted to enroll
-ad_np%>%
-  filter(.pred_class=="Yes")%>%
-  summarize(mean(sat)*100)
-```
-```{r}
-# calculate how many students are now predicted to enroll
-ad_np %>%
-  filter(.pred_class=="Yes") %>%
-  count()
-```
-```{r}
-# calculate how many low income students are now predicted to enroll
-ad_np %>%
-  filter(.pred_class=="Yes") %>%
-  filter(income<=50)%>%
-  count()
-```
-We now have a total revenue of $32,838,519 (meet expectation, above original), an SAT average of 1234 (below expectation, above original), a total number of enrollment of 1458 (meet expectation), and 77 low income students (below expectation, same as original).
+<!-- Add another policy:  -->
+<!-- ```{r} -->
+<!-- ad_np<-ad%>% -->
+<!--   mutate(net_price=ifelse(sat>=13,  -->
+<!--                               net_price - (sat-13)*35, -->
+<!--                               net_price - (sat-13)*5))%>% -->
+<!--   mutate(net_price=ifelse(income<=50, #incentivize low income -->
+<!--                               net_price - 30, -->
+<!--                               net_price))%>% -->
+<!--   mutate(net_price=ifelse(income>=150, #for high income -->
+<!--                               net_price + 10, -->
+<!--                               net_price))%>% -->
+<!--   mutate(net_price=ifelse(gpa>=3.8, #gpa和yield也有positive correlation -->
+<!--                               net_price - (gpa-3.8)*10, -->
+<!--                               net_price))%>% -->
+<!--   mutate(net_price=ifelse(sent_scores==1,#sent scores和yield的correlation最强 -->
+<!--                               net_price - 10, -->
+<!--                               net_price))%>% -->
+<!--   mutate(net_price=ifelse(net_price<0,0,net_price)) #if anybody has a net price of 0, change it to 0, otherwise leave it as it is-> because we don't charge people negative tuition! -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- ad_np<-ad_result%>% -->
+<!--   predict(ad_np)%>% -->
+<!--   bind_cols(ad_np) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate the total revenue to the school from students now predicted to enroll -->
+<!-- ad_np%>% -->
+<!--   filter(.pred_class=="Yes")%>% -->
+<!--   summarize(dollar(sum(net_price)*1000)) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate the SAT average for students now predicted to enroll -->
+<!-- ad_np%>% -->
+<!--   filter(.pred_class=="Yes")%>% -->
+<!--   summarize(mean(sat)*100) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate how many students are now predicted to enroll -->
+<!-- ad_np %>% -->
+<!--   filter(.pred_class=="Yes") %>% -->
+<!--   count() -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- # calculate how many low income students are now predicted to enroll -->
+<!-- ad_np %>% -->
+<!--   filter(.pred_class=="Yes") %>% -->
+<!--   filter(income<=50)%>% -->
+<!--   count() -->
+<!-- ``` -->
+<!-- We now have a total revenue of $32,838,519 (meet expectation, above original), an SAT average of 1234 (below expectation, above original), a total number of enrollment of 1458 (meet expectation), and 77 low income students (below expectation, same as original). -->
 
 
 

@@ -122,6 +122,10 @@ ad_wf_glm_roc %>%
 
 ```
 
+```{r}
+# Extract results
+ad_fit <- ad_result %>% extract_fit_parsnip()
+```
 
 
 
@@ -139,7 +143,6 @@ ad_negativeprice <- ad_result%>%
 ```
 
 ```{r}
-ad_fit <- ad_result %>% extract_fit_parsnip()
 ad_lowincome %>%
   ggplot(aes(x=net_price, y=yield)) + 
   geom_point() +
