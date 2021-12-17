@@ -36,6 +36,7 @@ rm(list=ls())
 graphics.off()
 # Clear the console
 cat("\014")
+# Automatically set directory
 if (Sys.info()[[4]] == "AaronGuo-MacBookPro") {
   setwd("~/Programming/Vanderbilt/DS/DS1000/projects/DS-1000/")
 }
